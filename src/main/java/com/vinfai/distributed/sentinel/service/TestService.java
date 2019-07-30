@@ -2,6 +2,8 @@ package com.vinfai.distributed.sentinel.service;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +28,32 @@ public class TestService {
         return "hello," + name;
     }
 
+    @SentinelResource(value = "sayHello2", blockHandler = "sayHelloBlockHandler2", fallback = "sayHelloFallback2")
+    public String sayHello2(String name, Integer cost) {
+        try {
+            Thread.sleep(cost);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "hello," + name;
+    }
+
+    public String sayHelloBlockHandler2(String name,Integer cost/*, DegradeException e*/) {
+//        e.printStackTrace();
+        return "blockException," + name /*+ e.getRule().getResource()*/;
+    }
+
+   /* public String sayHelloBlockHandler2(String name,Integer cost, BlockException e) {
+        e.printStackTrace();
+        return "blockException," + name + e.getRule().getResource();
+    }*/
+
+
+
+    public String sayHelloFallback2(String name, Integer cost, Throwable e) {
+        e.printStackTrace();
+        return "fallback exception," + name + cost;
+    }
 
     //Block 异常处理函数，参数最后多一个 BlockException，其余与原函数一致.
     public String sayHelloBlockHandler(String name, BlockException e) {

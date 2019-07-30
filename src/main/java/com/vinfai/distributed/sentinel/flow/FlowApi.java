@@ -27,6 +27,7 @@ public class FlowApi {
              name +=System.currentTimeMillis();
         } catch (BlockException e) {
             e.printStackTrace();
+            return "blocked";
         }finally {
             if (entry != null) {
                 entry.exit();
@@ -49,6 +50,8 @@ public class FlowApi {
 //        FlowRuleManager.loadRules();
         rule.setLimitApp("default");
         rules.add(rule);
+
+
         FlowRuleManager.loadRules(rules);
 
     }
