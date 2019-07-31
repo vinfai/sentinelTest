@@ -2,8 +2,6 @@ package com.vinfai.distributed.sentinel.service;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,26 +26,23 @@ public class TestService {
         return "hello," + name;
     }
 
-    @SentinelResource(value = "sayHello2", blockHandler = "sayHelloBlockHandler2", fallback = "sayHelloFallback2")
+    @SentinelResource(value = "sayHello2", blockHandler = "sayHelloBlockHandler2",fallback = "sayHelloFallback2")
     public String sayHello2(String name, Integer cost) {
-        try {
+        /*try {
             Thread.sleep(cost);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
+       if (cost >200) {
+            throw  new IndexOutOfBoundsException();
+       }
         return "hello," + name;
     }
 
-    public String sayHelloBlockHandler2(String name,Integer cost/*, DegradeException e*/) {
-//        e.printStackTrace();
-        return "blockException," + name /*+ e.getRule().getResource()*/;
-    }
-
-   /* public String sayHelloBlockHandler2(String name,Integer cost, BlockException e) {
+    public String sayHelloBlockHandler2(String name,Integer cost, BlockException e){
         e.printStackTrace();
-        return "blockException," + name + e.getRule().getResource();
-    }*/
-
+        return "blockException," + name + e.getRule().getResource()/**/;
+    }
 
 
     public String sayHelloFallback2(String name, Integer cost, Throwable e) {

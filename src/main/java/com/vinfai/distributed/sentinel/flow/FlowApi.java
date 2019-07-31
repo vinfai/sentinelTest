@@ -45,7 +45,7 @@ public class FlowApi {
         List<FlowRule> rules = new ArrayList<>();
         FlowRule rule = new FlowRule();
         rule.setResource(FLOWQPS_API);
-        rule.setCount(2);
+        rule.setCount(1);
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
 //        FlowRuleManager.loadRules();
         rule.setLimitApp("default");
